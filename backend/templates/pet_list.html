@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Pets | NexusVet{% endblock %}
+{% block page_title %}Pets{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+  <form class="search-bar" method="get" style="flex:1;margin-bottom:0">
+    <input type="text" name="search" value="{{ search }}" placeholder="Search pets...">
+    <select name="status" onchange="this.form.submit()">
+      <option value="">All Species</option>
+      <option value="dog" {% if status_filter == 'dog' %}selected{% endif %}>Dog</option>
+      <option value="cat" {% if status_filter == 'cat' %}selected{% endif %}>Cat</option>
+      <option value="bird" {% if status_filter == 'bird' %}selected{% endif %}>Bird</option>
+      <option value="rabbit" {% if status_filter == 'rabbit' %}selected{% endif %}>Rabbit</option>
+      <option value="fish" {% if status_filter == 'fish' %}selected{% endif %}>Fish</option>
+      <option value="reptile" {% if status_filter == 'reptile' %}selected{% endif %}>Reptile</option>
+      <option value="other" {% if status_filter == 'other' %}selected{% endif %}>Other</option>
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm">Search</button>
+  </form>
+  <a href="/pets/create/" class="btn btn-primary">+ New Pet</a>
+</div>
+
+<div class="card">
+  {% if records %}
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Species</th><th>Breed</th><th>Age Years</th><th>Owner Name</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td><a href="/pets/{{ r.pk }}/edit/"><strong>{{ r.name }}</strong></a></td>
+        <td><span class="badge badge-blue">{{ r.get_species_display }}</span></td>
+        <td>{{ r.breed|default:"-" }}</td>
+        <td>{{ r.age_years|default:"-" }}</td>
+        <td>{{ r.owner_name|default:"-" }}</td>
+        <td class="actions">
+          <a href="/pets/{{ r.pk }}/edit/" class="btn btn-primary btn-sm">Edit</a>
+          <form method="post" action="/pets/{{ r.pk }}/delete/" style="display:inline" onsubmit="return confirm('Delete?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Del</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">
+    <p>No pets found.</p>
+    <a href="/pets/create/" class="btn btn-primary" style="margin-top:1rem">Create Pet</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
