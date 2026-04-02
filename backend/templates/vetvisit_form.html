@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}New{% endif %} VetVisit | NexusVet{% endblock %}
+{% block page_title %}{% if editing %}Edit VetVisit{% else %}New VetVisit{% endif %}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:750px">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group">
+        <label>Pet Name</label>
+        <input type="text" name="pet_name" value="{{ record.pet_name|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Owner Name</label>
+        <input type="text" name="owner_name" value="{{ record.owner_name|default:'' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Vet</label>
+        <input type="text" name="vet" value="{{ record.vet|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Visit Type</label>
+        <select name="visit_type">
+          <option value="checkup" {% if record.visit_type == 'checkup' %}selected{% endif %}>Checkup</option>
+          <option value="vaccination" {% if record.visit_type == 'vaccination' %}selected{% endif %}>Vaccination</option>
+          <option value="surgery" {% if record.visit_type == 'surgery' %}selected{% endif %}>Surgery</option>
+          <option value="emergency" {% if record.visit_type == 'emergency' %}selected{% endif %}>Emergency</option>
+          <option value="grooming" {% if record.visit_type == 'grooming' %}selected{% endif %}>Grooming</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" name="date" value="{{ record.date|date:'Y-m-d'|default:'' }}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Diagnosis</label>
+      <textarea name="diagnosis">{{ record.diagnosis|default:'' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label>Treatment</label>
+      <textarea name="treatment">{{ record.treatment|default:'' }}</textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Cost</label>
+        <input type="number" step="0.01" name="cost" value="{{ record.cost|default:'0' }}">
+      </div>
+      <div class="form-group">
+        <label>Follow Up</label>
+        <input type="date" name="follow_up" value="{{ record.follow_up|date:'Y-m-d'|default:'' }}">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-top:1rem">
+      <button type="submit" class="btn btn-primary">{% if editing %}Update{% else %}Create{% endif %} VetVisit</button>
+      <a href="/vetvisits/" class="btn" style="background:var(--border);color:var(--text)">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
