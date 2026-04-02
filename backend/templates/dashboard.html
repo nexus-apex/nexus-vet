@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | NexusVet{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Total Pets</div>
+    <div class="stat-value">{{ pet_count }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Petowners</div>
+    <div class="stat-value" style="background:linear-gradient(135deg,#10b981,#06b6d4);-webkit-background-clip:text;background-clip:text">{{ petowner_count }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Vetvisits</div>
+    <div class="stat-value" style="background:linear-gradient(135deg,#f59e0b,#f97316);-webkit-background-clip:text;background-clip:text">{{ vetvisit_count }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Weight Kg</div>
+    <div class="stat-value" style="background:linear-gradient(135deg,#ef4444,#ec4899);-webkit-background-clip:text;background-clip:text">{{ pet_total_weight_kg|floatformat:0 }}</div>
+  </div>
+</div>
+
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+    <h3>Recent Pets</h3>
+    <a href="/pets/create/" class="btn btn-primary btn-sm">+ New Pet</a>
+  </div>
+  {% if recent %}
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Species</th><th>Breed</th><th>Age Years</th><th>Owner Name</th><th>Created</th></tr>
+    </thead>
+    <tbody>
+      {% for r in recent %}
+      <tr>
+        <td><a href="/pets/{{ r.pk }}/edit/">{{ r.name }}</a></td>
+        <td><span class="badge badge-blue">{{ r.get_species_display }}</span></td><td>{{ r.breed|default:"-" }}</td><td>{{ r.age_years|default:"-" }}</td><td>{{ r.owner_name|default:"-" }}</td><td style="color:var(--muted)">{{ r.created_at|date:"M d, Y" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">
+    <p>No records yet.</p>
+    <a href="/pets/create/" class="btn btn-primary" style="margin-top:1rem">Create First Pet</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
